@@ -8,7 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 const authRoutes = require("./routes/authRoutes");
-// const documentRoutes = require("./routes/documentRoutes");
+const documentRoutes = require("./routes/documentRoutes");
 
 database();
 
@@ -22,7 +22,7 @@ app.use(
 );
 
 app.use("/api/auth", authRoutes);
-// app.use("/api/documents", documentRoutes);
+app.use("/api/documents", documentRoutes);
 
 app.get("/", (req, res) => {
   res.send("Knowledge Base API running");
