@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const protect = require("../middlewares/authMiddleware");
+const protect = require("../middleware/authMiddleware");
 const {
   createDocument,
   getDocuments,
@@ -16,10 +16,10 @@ const {
 
 router.post("/", protect, createDocument);
 router.get("/", protect, getDocuments);
-router.get("/search", protect, searchDocuments);
 router.get("/:id", protect, getDocumentById);
 router.put("/:id", protect, updateDocument);
 router.delete("/:id", protect, deleteDocument);
+router.get("/search", protect, searchDocuments);
 router.put("/:id/share", protect, shareDocument);
 router.put("/:id/mention-auto-share", protect, autoShareOnMention);
 router.get("/:id/versions", protect, getVersions);
