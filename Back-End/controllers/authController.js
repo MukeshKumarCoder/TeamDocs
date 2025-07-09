@@ -1,6 +1,8 @@
 const User = require("../models/User");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 // signup
 exports.register = async (req, res) => {
@@ -19,7 +21,7 @@ exports.register = async (req, res) => {
     // check user already exist or not
     const userExists = await User.findOne({ email });
     if (userExists)
-      return res.status(400).json({
+      return res.status(409).json({
         success: false,
         message: "User already exists",
       });
@@ -59,7 +61,7 @@ exports.login = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message: "All fields are required, please try again",
+        message: "All fields are required",
       });
     }
 
@@ -74,36 +76,45 @@ exports.login = async (req, res) => {
       });
     }
 
-    // Generate JWT token and Compare Password
-    if (await bcrypt.compare(password, user.password)) {
-      const token = jwt.sign(
-        { email: user.email, id: user._id, accountType: user.accountType },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "24h",
-        }
-      );
-
-      // Save token to user document in database
-      user.resetToken = token;
-      user.password = undefined;
-      //create cookie and send response
-      const options = {
-        expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-        httpOnly: true,
-      };
-      res.cookie("token", token, options).status(200).json({
-        success: true,
-        token,
-        user,
-        message: "Logged in Successfully",
-      });
-    } else {
-      return res.status(401).json({
+    // check password
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+    if (!isPasswordMatch) {
+      return res.status(400).json({
         success: false,
-        message: "Password Is incorrect",
+        message: "Invalid Password",
       });
     }
+
+    // create token
+    const accessToken = jwt.sign(
+      { id: user._id },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "15m" }
+    );
+
+    const refreshToken = jwt.sign(
+      { id: user._id },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    await user.save();
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: "None",
+      secure: false,
+    });
+
+    // return response
+    return res.status(200).json({
+      success: true,
+      message: "User logged in successfully",
+      user,
+      accessToken,
+      refreshToken,
+    });
   } catch (error) {
     console.log("Error login", error);
     console.log(error);
@@ -139,7 +150,7 @@ exports.forgotPassword = async (req, res) => {
 
     // generate token
     const token = crypto.randomBytes(32).toString("hex");
-    user.resetToken = token;
+    user.token = token;
     user.resetTokenExpiry = Date.now() + 3600000; // 1 hour
 
     // save the user
@@ -166,11 +177,12 @@ exports.forgotPassword = async (req, res) => {
 exports.resetPassword = async (req, res) => {
   try {
     // get data from body
-    const { token, password } = req.body;
+    const token = req.params.token;
+    const { password } = req.body;
 
     // check user
     const user = await User.findOne({
-      resetToken: token,
+      token: token,
       resetTokenExpiry: { $gt: Date.now() },
     });
 
@@ -180,8 +192,10 @@ exports.resetPassword = async (req, res) => {
         message: "Invalid or expired token",
       });
 
-    user.password = password;
-    user.resetToken = undefined;
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    user.password = hashedPassword;
+    user.token = undefined;
     user.resetTokenExpiry = undefined;
     await user.save();
 

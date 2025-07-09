@@ -7,3 +7,15 @@ const generateToken = (userId) => {
 };
 
 module.exports = generateToken;
+
+// exports.login = async (req, res) => {
+//   const { email, password } = req.body;
+//   const user = await User.findOne({ email });
+//   if (!user || !(await user.comparePassword(password)))
+//     return res.status(400).json({ message: "Invalid credentials" });
+
+//   const token = generateToken(user._id);
+//   res.json({ token, user: { id: user._id, name: user.name, email } });
+// };
+
+

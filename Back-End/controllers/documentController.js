@@ -174,7 +174,7 @@ exports.deleteDocument = async (req, res) => {
       });
     }
 
-    await doc.remove();
+    await doc.deleteOne({ _id: doc._id });;
 
     return res.status(200).json({
       success: true,
