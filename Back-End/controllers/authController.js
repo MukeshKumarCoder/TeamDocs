@@ -2,6 +2,7 @@ const User = require("../models/User");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
 
+// signup
 exports.register = async (req, res) => {
   try {
     // get data from req body
@@ -39,6 +40,7 @@ exports.register = async (req, res) => {
       user,
     });
   } catch (error) {
+    console.log("Error register", error);
     console.log(error);
     return res.status(500).json({
       success: false,
@@ -47,6 +49,7 @@ exports.register = async (req, res) => {
   }
 };
 
+// login
 exports.login = async (req, res) => {
   try {
     // get data from req body
@@ -102,6 +105,7 @@ exports.login = async (req, res) => {
       });
     }
   } catch (error) {
+    console.log("Error login", error);
     console.log(error);
     return res.status(500).json({
       success: false,
@@ -110,6 +114,7 @@ exports.login = async (req, res) => {
   }
 };
 
+// forget password
 exports.forgotPassword = async (req, res) => {
   try {
     // get the data from req body
@@ -148,6 +153,7 @@ exports.forgotPassword = async (req, res) => {
       message: "Reset link sent to email",
     });
   } catch (error) {
+    console.log("Error password forget", error);
     return res.status(500).json({
       success: false,
       message: "Error occurred while forgetting password",
@@ -156,6 +162,7 @@ exports.forgotPassword = async (req, res) => {
   }
 };
 
+// reset password
 exports.resetPassword = async (req, res) => {
   try {
     // get data from body
@@ -183,6 +190,7 @@ exports.resetPassword = async (req, res) => {
       message: "Password reset successfully",
     });
   } catch (error) {
+    console.log("Error password reset", error);
     return res.status(500).json({
       success: false,
       message: "Error occurred while updating password",
