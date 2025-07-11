@@ -26,7 +26,7 @@ const CreateDocument = () => {
     setLoading(true);
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/documents/create",
+        "https://teamdocs-backend.onrender.com/api/documents/create",
         documentData,
         {
           headers: {
