@@ -12,7 +12,7 @@ const ForgatPassword = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/auth/forgot-password",
+        "https://teamdocs-backend.onrender.com/api/auth/forgot-password",
         { email },
         {
           headers: {
