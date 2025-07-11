@@ -20,8 +20,8 @@ const Login = () => {
     e.preventDefault();
     const url =
       currentState === "Login"
-        ? "http://localhost:8080/api/auth/login"
-        : "http://localhost:8080/api/auth/register";
+        ? "https://teamdocs-backend.onrender.com/api/auth/login"
+        : "https://teamdocs-backend.onrender.com/api/auth/register";
 
     try {
       const res = await axios.post(url, userData, {
