@@ -4,9 +4,11 @@ const User = require("../models/User");
 
 const protect = async (req, res, next) => {
   const token =
-    req.cookies.token ||
-    req.body.token ||
-    req.header("Authorization").replace("Bearer ", "");
+    req.cookies?.token ||
+    req.body?.token ||
+    (req.headers.authorization?.startsWith("Bearer ")
+      ? req.headers.authorization.split(" ")[1]
+      : null);
 
   //if token missing, then return response
   if (!token) {
@@ -31,4 +33,3 @@ const protect = async (req, res, next) => {
 
 module.exports = protect;
 // req.headers.authorization?.split(" ")[1];
-
