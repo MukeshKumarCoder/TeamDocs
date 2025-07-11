@@ -24,7 +24,7 @@ const DocumentEditor = () => {
 
   const fetchDocument = async () => {
     try {
-      const res = await axios.get(`http://localhost:8080/api/documents/${id}`, {
+      const res = await axios.get(`https://teamdocs-backend.onrender.com/api/documents/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -46,7 +46,7 @@ const DocumentEditor = () => {
     e.preventDefault();
     try {
       await axios.put(
-        `http://localhost:8080/api/documents/edit/${id}`,
+        `https://teamdocs-backend.onrender.com/api/documents/edit/${id}`,
         documentData,
         {
           headers: {
