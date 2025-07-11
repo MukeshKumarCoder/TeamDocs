@@ -13,7 +13,7 @@ const DocumentView = () => {
 
   const fetchDocument = async () => {
     try {
-      const res = await axios.get(`http://localhost:8080/api/documents/${id}`, {
+      const res = await axios.get(`https://teamdocs-backend.onrender.com/api/documents/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
