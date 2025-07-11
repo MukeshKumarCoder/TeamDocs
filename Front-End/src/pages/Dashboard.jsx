@@ -15,7 +15,7 @@ const Dashboard = () => {
 
   const getDocuments = async () => {
     try {
-      const res = await axios.get("http://localhost:8080/api/documents", {
+      const res = await axios.get("https://teamdocs-backend.onrender.com/api/documents", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -38,7 +38,7 @@ const Dashboard = () => {
       return;
 
     try {
-      await axios.delete(`http://localhost:8080/api/documents/${id}`, {
+      await axios.delete(`https://teamdocs-backend.onrender.com/api/documents/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
