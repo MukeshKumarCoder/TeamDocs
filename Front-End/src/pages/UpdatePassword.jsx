@@ -18,7 +18,7 @@ const UpdatePassword = () => {
     try {
       const token = location.pathname.split("/").at(-1);
       const res = await axios.post(
-        `http://localhost:8080/api/auth/reset-password/${token}`,
+        `https://teamdocs-backend.onrender.com/api/auth/reset-password/${token}`,
         { password },
         {
           headers: {
