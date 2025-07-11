@@ -14,10 +14,10 @@ const {
   restoreVersion,
 } = require("../controllers/documentController");
 
-router.post("/", protect, createDocument);
+router.post("/create", protect, createDocument);
 router.get("/", protect, getDocuments);
 router.get("/:id", protect, getDocumentById);
-router.put("/:id", protect, updateDocument);
+router.put("/edit/:id", protect, updateDocument);
 router.delete("/:id", protect, deleteDocument);
 router.get("/search", protect, searchDocuments);
 router.put("/:id/share", protect, shareDocument);
